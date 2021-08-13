@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.dannykrendel.dialogue-system": "https://github.com/DannyKrendel/Dialogue-System.git",
     "com.unity.2d.animation": "5.0.6",
     "com.unity.2d.pixel-perfect": "4.0.1",
     "com.unity.2d.psdimporter": "4.1.0",

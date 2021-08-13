@@ -28,12 +28,16 @@ public class Dialogue : MonoBehaviour
     private void OnEnable()
     {
         continueButton.onClick.AddListener(() => ContinueTriggered?.Invoke());
+        continueButton.transform
+            .DOMoveY(continueButton.transform.position.y - 20, .5f)
+            .SetLoops(-1, LoopType.Yoyo);
         Show();
     }
 
     private void OnDisable()
     {
         continueButton.onClick.RemoveAllListeners();
+        continueButton.transform.DOComplete();
     }
 
     public void AdvanceDialogue(string text, string name, string[] choices = null)
@@ -88,15 +92,11 @@ public class Dialogue : MonoBehaviour
     private void ShowContinueButton()
     {
         continueButton.gameObject.SetActive(true);
-        continueButton.transform
-            .DOMoveY(continueButton.transform.position.y - 20, .5f)
-            .SetLoops(-1, LoopType.Yoyo);
     }
 
     private void HideContinueButton()
     {
         continueButton.gameObject.SetActive(false);
-        continueButton.transform.DOComplete();
     }
 
     private void ShowChoices()

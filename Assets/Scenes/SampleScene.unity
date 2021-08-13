@@ -158,6 +158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141a39431bd64264e9f1fd0da74ce65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiCanvas: {fileID: 2016132883}
+  dialoguePrefab: {fileID: 1790341524934220308, guid: e918c7e36a5dc464f8f1b784f98e6366, type: 3}
   entityWithDialogue: {fileID: 235337119}
   triggerButton: {fileID: 235337121}
 --- !u!114 &235337121 stripped
@@ -249,6 +251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141a39431bd64264e9f1fd0da74ce65c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiCanvas: {fileID: 2016132883}
+  dialoguePrefab: {fileID: 1790341524934220308, guid: e918c7e36a5dc464f8f1b784f98e6366, type: 3}
   entityWithDialogue: {fileID: 439030375}
   triggerButton: {fileID: 439030373}
 --- !u!114 &439030375
@@ -390,8 +394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97682826d8d2bc941a25d4aae42a948a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCanvas: {fileID: 2016132883}
-  dialoguePrefab: {fileID: 1790341524934220308, guid: e918c7e36a5dc464f8f1b784f98e6366, type: 3}
 --- !u!1001 &997231403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -532,7 +534,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.864}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -57.2354, y: -23.8481}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1062029509

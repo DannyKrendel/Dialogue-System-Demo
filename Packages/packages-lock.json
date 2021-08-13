@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.dannykrendel.dialogue-system": {
+      "version": "https://github.com/DannyKrendel/Dialogue-System.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d79b526b0980c2156a1013bb6ef400c7c7e4e16e"
+    },
     "com.unity.2d.animation": {
       "version": "5.0.6",
       "depth": 0,

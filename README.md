@@ -1,2 +1,2 @@
 # Dialogue System
- A simple Unity dialogue system made using Ink and DOTween.
+ A Unity demo project for my dialogue system using Ink and DOTween.

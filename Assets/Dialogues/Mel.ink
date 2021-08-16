@@ -1,5 +1,5 @@
 # character: Mel
-Hey!
+<slow>Hey!</slow>
 What are you doing here?
 + [Me?] -> PlayDumb
 + [That's none of your business] -> Rude

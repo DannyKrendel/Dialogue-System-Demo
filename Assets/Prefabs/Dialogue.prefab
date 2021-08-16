@@ -329,8 +329,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2596831348929906906}
-  - {fileID: 5722508659596513738}
   - {fileID: 2595125001271371994}
+  - {fileID: 5722508659596513738}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -359,15 +359,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e44eff5c66e4474facd478200241263, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rootObject: {fileID: 1790341524934220308}
   dialogueText: {fileID: 3105046892458188424}
   characterName: {fileID: 3448834987919215952}
   characterAvatar: {fileID: 1624392102429537003}
   choicesContainer: {fileID: 4537410955099151094}
   continueButton: {fileID: 4927229215683541273}
-  choiceButtonPrefab: {fileID: 6860376026940623094, guid: b8694d8f320162b43ad8d7d7243ddad9, type: 3}
   canvasGroup: {fileID: 8783382889314187676}
   choicesContainerCanvasGroup: {fileID: 6428033886817743850}
+  choiceButtonPrefab: {fileID: 6860376026940623094, guid: b8694d8f320162b43ad8d7d7243ddad9, type: 3}
   fadeDuration: 0.5
+  typingAnimationSpeed: 0.04
+  showChoicesDuration: 0.3
+  hideChoicesDuration: 0.3
 --- !u!225 &8783382889314187676
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -410,7 +414,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4083785620971213272}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.30800003, y: 0.171}
   m_AnchorMax: {x: 0.9395209, y: 0.28874403}
@@ -819,7 +823,7 @@ RectTransform:
   - {fileID: 4103170295798146389}
   - {fileID: 1933362685335633296}
   m_Father: {fileID: 4083785620971213272}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.30600002, y: 0.28874403}
   m_AnchorMax: {x: 0.9368957, y: 0.705744}

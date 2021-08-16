@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DialogueSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +21,8 @@ public class DialogueTrigger : MonoBehaviour
 
     private void StartDialogue()
     {
+        if (DialogueManager.Instance.IsInDialogue) return;
+        
         triggerButton.interactable = false;
         
         var prefabInstance = Instantiate(dialoguePrefab, uiCanvas.transform, false);

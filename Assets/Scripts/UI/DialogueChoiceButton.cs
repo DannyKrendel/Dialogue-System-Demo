@@ -11,6 +11,12 @@ public class DialogueChoiceButton : MonoBehaviour
     [SerializeField] private TMP_Text choiceText;
     
     public int Id { get; private set; }
+    public string Text => choiceText.text;
+    public bool Interactable
+    {
+        get => button.interactable;
+        set => button.interactable = value;
+    }
 
     private void OnDisable()
     {

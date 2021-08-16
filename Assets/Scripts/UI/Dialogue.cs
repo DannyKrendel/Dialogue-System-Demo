@@ -1,36 +1,73 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Dialogue : MonoBehaviour
 {
+    [Header("References")] 
+    [SerializeField] private GameObject rootObject;
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private TMP_Text characterName;
     [SerializeField] private Image characterAvatar;
     [SerializeField] private GameObject choicesContainer;
     [SerializeField] private Button continueButton;
-    [SerializeField] private GameObject choiceButtonPrefab;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private CanvasGroup choicesContainerCanvasGroup;
-    [Range(.1f, 1)] [SerializeField] private float fadeDuration;
+    
+    [Header("Prefabs")]
+    [SerializeField] private GameObject choiceButtonPrefab;
+
+    [Header("Animation")]
+    [Range(.1f, 1), SerializeField] private float fadeDuration = .5f;
+    [Range(0, 1), SerializeField] private float typingAnimationSpeed = .05f;
+    [Range(0, .5f), SerializeField] private float showChoicesDuration = .3f;
+    [Range(0, .5f), SerializeField] private float hideChoicesDuration = .3f;
 
     private readonly List<DialogueChoiceButton> _choiceButtons = new List<DialogueChoiceButton>();
-    private Sequence _choiceSequence;
+    
+    private Sequence _choiceShowSequence;
+    private Sequence _choiceHideSequence;
+    private Tween _continueButtonLoopTween;
+    private DialogueTextAnimator _dialogueTextAnimator;
 
     public event Action ContinueTriggered;
     public event Action<int> OptionChosen;
 
+    private void Awake()
+    {
+        _dialogueTextAnimator = new DialogueTextAnimator(dialogueText);
+        
+        var position = choicesContainer.transform.position;
+        var start = position.y - 50;
+        var end = position.y;
+        _choiceShowSequence = DOTween.Sequence()
+            .Append(choicesContainerCanvasGroup.DOFade(1, showChoicesDuration).From(0).SetEase(Ease.OutSine))
+            .Join(choicesContainer.transform.DOMoveY(end, showChoicesDuration).From(start).SetEase(Ease.OutSine))
+            .SetAutoKill(false)
+            .Pause();
+        
+        _choiceHideSequence = DOTween.Sequence()
+            .Append(choicesContainerCanvasGroup.DOFade(0, hideChoicesDuration).From(1).SetEase(Ease.InSine))
+            .Join(choicesContainer.transform.DOMoveY(-50, hideChoicesDuration).SetRelative().SetEase(Ease.InSine))
+            .AppendCallback(() => choicesContainer.transform.position = position)
+            .SetAutoKill(false)
+            .Pause();
+
+        _continueButtonLoopTween = continueButton.transform
+            .DOMoveY(continueButton.transform.position.y - 20, .5f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .Pause();
+    }
+
     private void OnEnable()
     {
-        continueButton.onClick.AddListener(() => ContinueTriggered?.Invoke());
-        continueButton.transform
-            .DOMoveY(continueButton.transform.position.y - 20, .5f)
-            .SetLoops(-1, LoopType.Yoyo);
+        // continueButton.onClick.AddListener(OnContinuePressed);
+
+        _continueButtonLoopTween.Play();
         Show();
     }
 
@@ -40,43 +77,51 @@ public class Dialogue : MonoBehaviour
         continueButton.transform.DOComplete();
     }
 
+    private void Update()
+    {
+        if (!IsRootClicked()) return;
+        
+        if (_dialogueTextAnimator.IsPlaying)
+            _dialogueTextAnimator.Complete();
+        else
+            OnContinuePressed();
+    }
+
     public void AdvanceDialogue(string text, string name, string[] choices = null)
     {
         HideContinueButton();
-
-        // TODO: play animations here
-
-        dialogueText.text = text;
+        
         characterName.text = name;
         characterAvatar.sprite = AssetUtils.FindAndLoadAsset<Sprite>(
             $"{name} t:sprite", new[] {"Assets/Sprites/Avatars"});
 
-        if (choices == null)
-        {
-            if (_choiceButtons.Count > 0) HideChoices(ClearChoices);
-            ShowContinueButton();
-            return;
-        }
+        if (_choiceButtons.Count > 0) HideChoices();
 
-        if (_choiceButtons.Count > 0)
-        {
-            HideChoices(() =>
+        _dialogueTextAnimator
+            .Play(text, typingAnimationSpeed)
+            .OnComplete(() =>
             {
                 ClearChoices();
+                var c = choices;
+                if (choices == null)
+                {
+                    ShowContinueButton();
+                    return;
+                }
+                
                 CreateChoices(choices);
                 ShowChoices();
             });
-        }
-        else
-        {
-            CreateChoices(choices);
-            ShowChoices();
-        }
     }
 
     public void EndDialogue()
     {
         Hide(() => Destroy(gameObject));
+    }
+
+    private void OnContinuePressed()
+    {
+        ContinueTriggered?.Invoke();
     }
 
     private void Show(Action onComplete = null)
@@ -91,34 +136,14 @@ public class Dialogue : MonoBehaviour
 
     private void ShowContinueButton()
     {
+        continueButton.interactable = true;
         continueButton.gameObject.SetActive(true);
     }
 
     private void HideContinueButton()
     {
+        continueButton.interactable = false;
         continueButton.gameObject.SetActive(false);
-    }
-
-    private void ShowChoices()
-    {
-        var position = choicesContainer.transform.position;
-        var start = position.y - 50;
-        var end = position.y;
-        _choiceSequence = DOTween.Sequence()
-            .Append(choicesContainerCanvasGroup.DOFade(1, .3f).From(0))
-            .Join(choicesContainer.transform
-                .DOMoveY(end, .3f)
-                .From(start));
-    }
-
-    private void HideChoices(Action onComplete = null)
-    {
-        var position = choicesContainer.transform.position;
-        _choiceSequence = DOTween.Sequence()
-            .Append(choicesContainerCanvasGroup.DOFade(0, .3f).From(1))
-            .Join(choicesContainer.transform.DOMoveY(-50, .3f).SetRelative())
-            .AppendCallback(() => choicesContainer.transform.position = position)
-            .OnComplete(() => onComplete?.Invoke());
     }
 
     private void CreateChoices(string[] choices)
@@ -143,5 +168,35 @@ public class Dialogue : MonoBehaviour
             Destroy(button.gameObject);
         }
         _choiceButtons.Clear();
+    }
+    
+    private void ShowChoices()
+    {
+        foreach (var button in _choiceButtons)
+        {
+            button.Interactable = true;
+        }
+
+        _choiceShowSequence.Restart();
+        _choiceShowSequence.Play();
+    }
+
+    private void HideChoices()
+    {
+        foreach (var button in _choiceButtons)
+        {
+            button.Interactable = false;
+        }
+
+        _choiceHideSequence.Restart();
+        _choiceHideSequence.Play();
+    }
+
+    private bool IsRootClicked()
+    {
+        return Input.GetMouseButtonDown(0) && RectTransformUtility.RectangleContainsScreenPoint(
+            rootObject.GetComponent<RectTransform>(),
+            Input.mousePosition,
+            null);
     }
 }
